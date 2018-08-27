@@ -92,13 +92,24 @@ data.loc[:,"LAST_TWO"]=data.loc[:,'PLACE'].apply(lambda x: x[-2:])
 ## q4 is a smaller dataframe contains the columns we need for question 4
 q4=data[['PLACE','LAST_TWO']]
 q4.loc[:,'result']=""
-for full, abbreviation in abbre_map.items():
-    q4.loc[q4.loc[:,'PLACE'].str.contains(full),abbreviation]=abbreviation
 
+q4['stanfard']=0
+q4.loc[q4.ix[:,'LAST_TWO'].isin(abbre),'stanfard']=1
+q4.loc[q4.ix[:,'LAST_TWO'].isin(abbre),'result']=q4.loc[q4.ix[:,'LAST_TWO'].isin(abbre),'LAST_TWO']
+
+q44=pd.DataFrame(q4.loc[q4['stanfard']==0,'PLACE'])
+q44.loc[:,'result']=""
 for element in abbre:
-    q4.loc[:,'result']=q4.loc[:,'result'].map(str)+q4.loc[:,element].map(str)+" "
+    q44.loc[:,element]=""
+for full, abbreviation in abbre_map.items():
+    q44.loc[q44.loc[:,'PLACE'].str.contains(full),abbreviation]=abbreviation+", "
 
+for column in abbre:
+    q44.loc[q44.ix[:,column].notna(),'result']=q44.loc[q44.ix[:,column].notna(),'result'].map(str)+q44.loc[q44.ix[:,column].notna(),column].map(str)
 
+q4.loc[q4['stanfard']==0,'result']=q44.loc[q4['stanfard']==0,'result']
+q4.loc[:,'result']=q4.loc[:,"result"].apply(lambda x:x.split(', '))
+q4.loc[:,'result']=q4.loc[:,'result'].apply(lambda x:pd.Series(x).unique())
 ## check if all the PLACE have been converted
 data.loc[:,'PROVINCE']=q4.loc[:,'result']
 ##### print ('nan provinces:')--------------
@@ -106,11 +117,11 @@ data.loc[:,'PROVINCE']=q4.loc[:,'result']
 #     if str(data.loc[row,'PROVINCE'])=='nan':
 #         print (data.loc[row,'PLACE'])
         # data.loc[:,'PROVINCE']='SK,MB'
-### There are still many PLACE such as Vancouver Island are not in the mapping idctionary.
+### There are still many PLACE such as Vancouver Island are not in the mapping dictionary.
  ##the above for loop list all the places that missing in PROVINCE column.
- ##These PLACES have been added in the abbre_map dictionary
-
-
+#  ##These PLACES have been added in the abbre_map dictionary
+# print (q44['PLACE'])
+print (data.loc[:,'PROVINCE'])
 ##------------------------
 ## quwaation number 5
 q5=dict()
@@ -133,4 +144,4 @@ plt.barh(q5['Region'],q5['Count'],color='blue')
 plt.xlabel=('Province')
 plt.ylabel=('Number of disaster events happened')
 plt.title=('Number of disaster events happened in each province')
-plt.show()
+# plt.show()
