@@ -23,15 +23,15 @@ nonzero_cost=q1[q1['ESTIMATED TOTAL COST']>0]
 # print (zero_cost.shape)
 # print ('shape of nonzero rows:')
 # print (nonzero_cost['EVENT TYPE'])
-# plt.figure(figsize=(10,5))
-# ax=plt.barh(nonzero_cost['EVENT TYPE'],nonzero_cost['ESTIMATED TOTAL COST IN BILLIONS'],color='b')
-# plt.ylabel('Estiamted total cost in billions')
-# plt.xlabel('Event type')
-#
-# plt.ylabel('Event type')
-# plt.xlabel("Estimated total cost in billions")
-# plt.title("Estimated total cost for each event type")
-# plt.show()
+fig1=plt.figure(1,figsize=(10,5))
+ax=fig1.add_subplot(1,1,1)
+ax.barh(nonzero_cost['EVENT TYPE'],nonzero_cost['ESTIMATED TOTAL COST IN BILLIONS'],color='b')
+ax.set_ylabel('Estiamted total cost in billions')
+ax.set_xlabel('Event type')
+ax.set_title("Estimated total cost for each event type")
+ll, bb, ww, hh = ax.get_position().bounds
+ax.set_position([ll+ 0.3*ww, bb, ww*0.7, hh])
+plt.show()
 
 ###---------------------------------------------
  ##q2 number of events happend each year where DFAA payments (both federal and provincial) have been applied.
@@ -42,17 +42,19 @@ data_extract=data[data["FEDERAL DFAA PAYMENTS"].notnull()& data["PROVINCIAL DFAA
 count=data_extract.groupby('YEAR').size()
 print (data['YEAR'].max())
 print (data['YEAR'].min())
-# plt.figure(figsize=(10,5))
-# sns.countplot(x="YEAR",data=data_extract,color='blue')
-# plt.xticks(rotation=90)
-# plt.xlabel('Year',fontsize=16)
-# # print ('number of unique years')
-#
-# plt.yticks(np.arange(0, 25, step=5))
-# plt.ylabel('Number of events happened each year')
-# plt.title('Number of events happened each year where DFAA payments applied ')
-#
-# plt.show()
+fig2=plt.figure(2,figsize=(10,5))
+
+ax=fig2.add_subplot(1,1,1)
+sns.countplot(x="YEAR",data=data_extract,color='blue')
+plt.xticks(rotation=90)
+ax.set_xlabel('Year',fontsize=16)
+# print ('number of unique years')
+
+ax.set_ylabel('Number of events happened each year')
+ax.set_title('Number of events happened each year where DFAA payments applied ')
+ll, bb, ww, hh = ax.get_position().bounds
+ax.set_position([ll, bb+0.1*hh, ww, hh*0.9])
+plt.show()
 
 
 ### data is from 40 different years
@@ -109,7 +111,7 @@ for column in abbre:
 
 q4.loc[q4['stanfard']==0,'result']=q44.loc[q4['stanfard']==0,'result']
 q4.loc[:,'result']=q4.loc[:,"result"].apply(lambda x:x.split(', '))
-q4.loc[:,'result']=q4.loc[:,'result'].apply(lambda x:pd.Series(x).unique())
+q4.loc[:,'result']=q4.loc[:,'result'].apply(lambda x:np.array2string(pd.Series(x).unique()))
 ## check if all the PLACE have been converted
 data.loc[:,'PROVINCE']=q4.loc[:,'result']
 ##### print ('nan provinces:')--------------
@@ -138,10 +140,11 @@ q5=q5.sort_values(by='Count')
 
 
 ### print chart for question 5
-
-plt.figure(figsize=(10,5))
-plt.barh(q5['Region'],q5['Count'],color='blue')
-plt.xlabel=('Province')
-plt.ylabel=('Number of disaster events happened')
-plt.title=('Number of disaster events happened in each province')
-# plt.show()
+# print (q5.head(10))
+fig3=plt.figure(3,figsize=(10,5))
+ax=fig3.add_subplot(1,1,1)
+ax.barh(q5['Region'],q5['Count'],color='blue')
+ax.set_xlabel('Province')
+ax.set_ylabel('Number of disaster events happened')
+ax.set_title('Number of disaster events happened in each province')
+plt.show()
