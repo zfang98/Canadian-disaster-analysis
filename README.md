@@ -1,4 +1,7 @@
 ##### Project: Canadian-disaster-analysis
+##### Software and operating system: 
+##### Anaconda3, Python 3.7, OSX 10.10.5
+##### Script was edited in Atom. 
 ##### 1. Introduction
 ##### The dataset contains 1079 disaster events happened across Canada during 1900 to 2016. Data were analyzed by Python (version 3.7), and NumPy, Pandas, DataTime, Matplotlib and Seaborn libraries were used in this analysis.
 ##### 2. The following tasks were completed
